@@ -17,12 +17,7 @@ The Stochastic Path Sampler is a generative sampler for lattice field theory bas
 
 SPS constructs forward and auxiliary backward stochastic processes connecting a simple prior distribution to an unnormalized target distribution,
 
-[
-\pi(\phi)
-=========
-
-\frac{1}{Z}e^{-S(\phi)}.
-]
+$\pi(\phi) = \frac{1}{Z}e^{-S(\phi)}$.
 
 The forward and backward processes are trained by minimizing a path-space variational objective defined through the log-ratio of their trajectory measures. Once trained, the forward process generates independent proposals for the target lattice field distribution.
 
@@ -349,14 +344,14 @@ The generated arrays are saved as
 
 ```text
 kappa<KAPPA>L<LATTICE_SIZE>/
-├── DM.npy
+├── SPS.npy
 ├── logp.npy
 └── action.npy
 ```
 
 Their contents are:
 
-* `DM.npy`: generated terminal field configurations;
+* `SPS.npy`: generated terminal field configurations;
 * `logp.npy`: path-dependent log-density estimates;
 * `action.npy`: terminal action values.
 
@@ -475,7 +470,7 @@ Please cite the following paper when using this code:
 
 No license has currently been specified.
 
-Before redistributing or modifying the code, add an appropriate open-source license such as `MIT`, `BSD-3-Clause`, or `GPL-3.0`, according to the authors' intended terms of use.
+Before redistributing or modifying the code, add an appropriate open-source license according to the authors' intended terms of use.
 
 ## Contact
 
