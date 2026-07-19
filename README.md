@@ -32,7 +32,7 @@ This implementation includes:
 
 The implemented lattice action is
 
-$$
+$
 S[\phi]
 =
 \sum_x
@@ -43,7 +43,7 @@ S[\phi]
 -
 2\kappa\sum_{\mu}\phi_x\phi_{x+\hat\mu}
 \right].
-$$
+$
 
 Here:
 
@@ -57,13 +57,13 @@ The action is implemented in `Action.py`.
 
 Let $N$ denote the number of discrete stochastic steps and
 
-$$
+$
 \Delta t=\frac{1}{N}.
-$$
+$
 
 A forward transition is represented schematically as
 
-$$
+$
 \phi_{i+1}
 =
 \phi_i
@@ -72,13 +72,13 @@ $$
 K_{\theta,\mathrm F}(\phi_i,t_i)
 +
 \sigma_\theta(t_i)\sqrt{\Delta t}\,\eta_i,
-$$
+$
 
 with
 
-$$
+$
 \eta_i\sim\mathcal N(0,I).
-$$
+$
 
 The auxiliary backward transition is represented as
 
