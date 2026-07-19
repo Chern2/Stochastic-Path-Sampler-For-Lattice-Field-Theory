@@ -32,7 +32,7 @@ def run_training(Lx, Ly, NUM_diffusion, kappa, lam, mb_size):
                  alpha=None)
 
 
-    stochasticnet = StochasticNet(Lx=Lx, Ly=Ly, use_symmetry=False)
+    stochasticnet = StochasticNet(Lx=Lx, Ly=Ly,  use_symmetry=False)
     optimizer = tf.optimizers.Adam(learning_rate=lr,
                                     weight_decay=1e-2,
                                     beta_1=0.9,
