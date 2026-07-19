@@ -74,7 +74,7 @@ def run_training(Lx, Ly, NUM_diffusion, kappa, lam, mb_size):
             manager.save()
             save_path = 'kappa'+str(kappa)+'L'+str(Lx)
             cfgs, logP, action_val = stochasticnet.ForwardDiffusion(4096, shape, NUM_diffusion, action)
-            np.save(save_path + '/DM.npy', cfgs)
+            np.save(save_path + '/SPS.npy', cfgs)
             np.save(save_path+'/logp.npy', logP)
             np.save(save_path+'/action.npy', action_val)
 
