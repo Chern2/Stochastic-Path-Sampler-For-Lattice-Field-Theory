@@ -82,7 +82,7 @@ $
 
 The auxiliary backward transition is represented as
 
-$$
+$
 \phi_i
 =
 \phi_{i+1}
@@ -91,17 +91,17 @@ $$
 K_{\theta,\mathrm B}(\phi_{i+1},t_i)
 +
 \sigma_\theta(t_i)\sqrt{\Delta t}\,\widetilde\eta_i.
-$$
+$
 
 For a trajectory
 
-$$
+$
 \tau=(\phi_0,\phi_1,\ldots,\phi_N),
-$$
+$
 
 the code accumulates the path-dependent endpoint log-density estimator
 
-$$
+$
 \log q_{\mathrm{SPS}}(\phi_N;\tau)
 =
 \log \pi_0(\phi_0)
@@ -112,11 +112,11 @@ $$
 -
 \log q_{\mathrm B}(\phi_i\mid\phi_{i+1})
 \right].
-$$
+$
 
 The training objective is
 
-$$
+$
 \mathcal L_{\mathrm{SPS}}
 =
 \mathbb E_{q_{\mathrm F}}
@@ -125,7 +125,7 @@ $$
 +
 S(\phi_N)
 \right],
-$$
+$
 
 up to the unknown normalization constant of the target distribution.
 
@@ -248,21 +248,6 @@ train.py
 generation.py
 ```
 
-If the files were downloaded with suffixes such as `(6)` or `(15)`, rename them before running the code.
-
-For example:
-
-```bash
-mv 'Action(6).py' Action.py
-mv 'CyclicConv2D(13).py' CyclicConv2D.py
-mv 'DiffusionSubNet(67).py' DiffusionSubNet.py
-mv 'StochasticNet(15).py' StochasticNet.py
-mv 'Symmerty(3).py' Symmerty.py
-mv 'Time_embedding(7).py' Time_embedding.py
-mv 'lr(2).py' lr.py
-mv 'train(8).py' train.py
-mv 'generation(4).py' generation.py
-```
 
 ## Training
 
@@ -348,14 +333,14 @@ The script restores the latest checkpoint and saves
 
 ```text
 kappa<KAPPA>L<L>/
-├── DM.npy
+├── SPS.npy
 ├── logp.npy
 └── action.npy
 ```
 
 The files contain:
 
-- `DM.npy`: generated terminal configurations;
+- `SPS.npy`: generated terminal configurations;
 - `logp.npy`: accumulated path log-density estimates;
 - `action.npy`: terminal action values.
 
@@ -462,6 +447,3 @@ Please cite the associated paper when using this code:
 }
 ```
 
-## License
-
-No software license is included in the current repository. Add a `LICENSE` file before public redistribution.
