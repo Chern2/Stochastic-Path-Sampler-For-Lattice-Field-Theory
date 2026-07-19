@@ -21,7 +21,7 @@ $\pi(\phi) = \frac{1}{Z}e^{-S(\phi)}$.
 
 The forward and backward processes are trained by minimizing a path-space variational objective defined through the log-ratio of their trajectory measures. Once trained, the forward process generates independent proposals for the target lattice field distribution.
 
-This implementation applies SPS to the two-dimensional scalar (\phi^4) theory with periodic boundary conditions.
+This implementation applies SPS to the two-dimensional scalar $\phi^4$ theory with periodic boundary conditions.
 
 ## Lattice action
 
@@ -29,12 +29,12 @@ The lattice action implemented in this repository is
 
 
 $S[\phi] =\sum_x \left[ (1-2\lambda)\phi_x^2 + \lambda\phi_x^4 - 2\kappa \sum_{\mu} \phi_x\phi_{x+\hat{\mu}} \right],$
-]
+
 
 where:
 
-* (\kappa) is the hopping parameter;
-* (\lambda) is the quartic coupling;
+* $\kappa$ is the hopping parameter;
+* $\lambda$ is the quartic coupling;
 * periodic boundary conditions are imposed in every lattice direction.
 
 The action is evaluated in `Action.py`.
