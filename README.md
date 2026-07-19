@@ -1,35 +1,36 @@
 # Stochastic Path Sampler for Lattice Field Theory
 
-Official TensorFlow implementation of the **Stochastic Path Sampler (SPS)** for lattice field theory.
+TensorFlow implementation of the **Stochastic Path Sampler (SPS)** for two-dimensional lattice scalar field theory.
 
-This repository contains the code associated with:
+This repository accompanies:
 
 > **Stochastic Path Sampler for Lattice Field Theory**  
-> Shiyang Chen, Moxian Qian, Gert Aarts, Biagio Lucini, and Kai Zhou  
-> arXiv:2606.13790 [hep-lat]
-
-- arXiv: <https://arxiv.org/abs/2606.13790>
-- DOI: <https://doi.org/10.48550/arXiv.2606.13790>
+> arXiv:2606.13790 [hep-lat]  
+> DOI: https://doi.org/10.48550/arXiv.2606.13790
 
 ## Overview
 
-The Stochastic Path Sampler is a generative sampler for lattice field theory based on learnable nonequilibrium stochastic dynamics.
-
-SPS constructs a forward stochastic process and an auxiliary backward stochastic process connecting a tractable prior distribution to an unnormalized target distribution,
+The Stochastic Path Sampler constructs learnable forward and backward stochastic dynamics between a simple prior distribution and an unnormalized lattice-field target distribution,
 
 $$
-\pi(\phi)
-=
-\frac{1}{Z}e^{-S(\phi)}.
+\pi(\phi)=\frac{1}{Z}e^{-S(\phi)}.
 $$
 
-The model is trained by minimizing a path-space variational objective defined through the log-ratio of the forward and backward trajectory measures. After training, the learned forward process can generate proposals for the target lattice field distribution.
+The forward process generates field configurations, while an auxiliary backward process is used to evaluate a trajectory-level probability ratio. Training minimizes a path-space variational objective that does not require samples from the target distribution.
 
-This implementation applies SPS to the two-dimensional scalar $\phi^4$ theory with periodic boundary conditions.
+This implementation includes:
+
+- a two-dimensional scalar $\phi^4$ lattice action;
+- periodic convolutional layers;
+- learnable forward and backward drift networks;
+- Fourier time embeddings;
+- a learnable diffusion schedule;
+- optional lattice-symmetry transformations;
+- training and configuration-generation scripts.
 
 ## Lattice action
 
-The lattice action implemented in this repository is
+The implemented lattice action is
 
 $$
 S[\phi]
@@ -40,9 +41,7 @@ S[\phi]
 +
 \lambda\phi_x^4
 -
-2\kappa
-\sum_{\mu}
-\phi_x\phi_{x+\hat{\mu}}
+2\kappa\sum_{\mu}\phi_x\phi_{x+\hat\mu}
 \right].
 $$
 
@@ -56,7 +55,13 @@ The action is implemented in `Action.py`.
 
 ## Stochastic dynamics
 
-For a discretization depth $N$, the forward transition is represented schematically by
+Let $N$ denote the number of discrete stochastic steps and
+
+$$
+\Delta t=\frac{1}{N}.
+$$
+
+A forward transition is represented schematically as
 
 $$
 \phi_{i+1}
@@ -64,20 +69,18 @@ $$
 \phi_i
 +
 \sigma_\theta^2(t_i)
-K_{\theta,\mathrm{F}}(\phi_i,t_i)
+K_{\theta,\mathrm F}(\phi_i,t_i)
 +
 \sigma_\theta(t_i)\sqrt{\Delta t}\,\eta_i,
 $$
 
-where
+with
 
 $$
-\eta_i\sim\mathcal{N}(0,I),
-\qquad
-\Delta t=\frac{1}{N}.
+\eta_i\sim\mathcal N(0,I).
 $$
 
-An auxiliary backward transition is defined using a second drift network,
+The auxiliary backward transition is represented as
 
 $$
 \phi_i
@@ -85,12 +88,18 @@ $$
 \phi_{i+1}
 +
 \sigma_\theta^2(t_i)
-K_{\theta,\mathrm{B}}(\phi_{i+1},t_i)
+K_{\theta,\mathrm B}(\phi_{i+1},t_i)
 +
-\sigma_\theta(t_i)\sqrt{\Delta t}\,\widetilde{\eta}_i.
+\sigma_\theta(t_i)\sqrt{\Delta t}\,\widetilde\eta_i.
 $$
 
-The trajectory-dependent endpoint log-density estimator is accumulated as
+For a trajectory
+
+$$
+\tau=(\phi_0,\phi_1,\ldots,\phi_N),
+$$
+
+the code accumulates the path-dependent endpoint log-density estimator
 
 $$
 \log q_{\mathrm{SPS}}(\phi_N;\tau)
@@ -99,18 +108,18 @@ $$
 +
 \sum_{i=0}^{N-1}
 \left[
-\log q_{\mathrm{F}}(\phi_{i+1}\mid\phi_i)
+\log q_{\mathrm F}(\phi_{i+1}\mid\phi_i)
 -
-\log q_{\mathrm{B}}(\phi_i\mid\phi_{i+1})
+\log q_{\mathrm B}(\phi_i\mid\phi_{i+1})
 \right].
 $$
 
-The training objective is the reverse path-space KL estimator
+The training objective is
 
 $$
-\mathcal{L}_{\mathrm{SPS}}
+\mathcal L_{\mathrm{SPS}}
 =
-\mathbb{E}_{q_{\mathrm{F}}}
+\mathbb E_{q_{\mathrm F}}
 \left[
 \log q_{\mathrm{SPS}}(\phi_N;\tau)
 +
@@ -136,85 +145,80 @@ up to the unknown normalization constant of the target distribution.
 └── README.md
 ```
 
-## Code description
-
 ### `Action.py`
 
-Implements the two-dimensional scalar $\phi^4$ lattice action with periodic nearest-neighbour interactions.
+Defines the two-dimensional scalar $\phi^4$ lattice action with periodic nearest-neighbour interactions.
 
 ### `CyclicConv2D.py`
 
-Implements two-dimensional convolution with periodic padding.
+Implements periodic two-dimensional convolutions. The layer supports:
 
-The layer supports:
-
-- periodic boundary conditions;
+- periodic padding;
 - square and rectangular kernels;
-- optional $D_4$ averaging for square kernels;
-- optional $D_2$ averaging for rectangular kernels;
-- grouped convolution.
+- optional symmetry averaging;
+- $D_4$ averaging for square kernels;
+- $D_2$ averaging for rectangular kernels;
+- grouped convolutions.
 
 ### `DiffusionSubNet.py`
 
-Defines the neural drift network used in the forward and backward stochastic processes.
-
-The architecture contains:
+Defines the neural drift model used by the forward and backward stochastic processes. The network contains:
 
 - periodic convolutional layers;
 - residual connections;
-- Fourier time embeddings;
-- multiplicative time conditioning;
+- Fourier time conditioning;
+- multiplicative time modulation;
 - batch normalization;
-- bounded nonlinear activations;
-- a learnable time-dependent diffusion schedule.
+- bounded activations;
+- a learnable diffusion schedule.
 
 ### `StochasticNet.py`
 
-Implements the complete SPS model, including:
+Defines the complete SPS model, including:
 
-- Gaussian prior sampling;
+- the Gaussian prior distribution;
 - forward stochastic transitions;
-- auxiliary backward transitions;
-- trajectory log-ratio accumulation;
-- terminal-action evaluation;
-- full forward trajectory generation.
+- backward stochastic transitions;
+- path log-ratio accumulation;
+- full forward trajectory generation;
+- terminal action evaluation.
 
 ### `Symmerty.py`
 
-Implements random lattice symmetry transformations, including:
+Implements optional random lattice transformations, including:
 
-- global $\mathbb{Z}_2$ field inversion;
+- global $\mathbb Z_2$ sign flips;
 - reflections;
 - $180^\circ$ rotations;
-- periodic lattice translations.
+- periodic translations.
 
-The filename is currently spelled `Symmerty.py`. Rename it only if the corresponding import statements are also updated.
+The file name is currently spelled `Symmerty.py`, and the import statements use the same spelling.
 
 ### `Time_embedding.py`
 
-Implements Fourier-feature embeddings for conditioning the neural networks on stochastic time.
+Implements Fourier-feature embeddings of the normalized stochastic time.
 
 ### `lr.py`
 
-Implements a delayed cosine-decay learning-rate schedule. The learning rate remains fixed during an initial stage and then decays according to a cosine schedule.
+Implements a delayed cosine-decay learning-rate schedule.
 
 ### `train.py`
 
-Main training script for minimizing the SPS path-space objective.
+Trains the SPS model by minimizing the path-space objective.
 
 ### `generation.py`
 
-Restores a trained checkpoint and generates lattice field configurations using the learned forward stochastic process.
+Loads a trained checkpoint and generates lattice configurations with the learned forward process.
 
 ## Requirements
 
-The code was developed with TensorFlow and TensorFlow Probability.
+The code is written in Python using TensorFlow.
 
-A representative environment is
+A compatible environment is:
 
 ```text
 Python >= 3.10
-TensorFlow == 2.15
+TensorFlow 2.15
 TensorFlow Probability
 NumPy
 tqdm
@@ -226,27 +230,43 @@ Install the main dependencies with
 pip install tensorflow==2.15 tensorflow-probability numpy tqdm
 ```
 
-For GPU execution, install TensorFlow together with CUDA and cuDNN versions compatible with the local system.
+GPU users should install TensorFlow, CUDA, and cuDNN versions that are mutually compatible with their system.
 
-## File preparation
+## Preparing the files
 
-The uploaded files should be renamed as follows before execution:
+The imports assume the following exact file names:
 
 ```text
-Action(6).py              -> Action.py
-CyclicConv2D(13).py       -> CyclicConv2D.py
-DiffusionSubNet(67).py    -> DiffusionSubNet.py
-generation(4).py          -> generation.py
-lr(2).py                  -> lr.py
-StochasticNet(15).py      -> StochasticNet.py
-Symmerty(3).py            -> Symmerty.py
-Time_embedding(7).py      -> Time_embedding.py
-train(8).py               -> train.py
+Action.py
+CyclicConv2D.py
+DiffusionSubNet.py
+StochasticNet.py
+Symmerty.py
+Time_embedding.py
+lr.py
+train.py
+generation.py
+```
+
+If the files were downloaded with suffixes such as `(6)` or `(15)`, rename them before running the code.
+
+For example:
+
+```bash
+mv 'Action(6).py' Action.py
+mv 'CyclicConv2D(13).py' CyclicConv2D.py
+mv 'DiffusionSubNet(67).py' DiffusionSubNet.py
+mv 'StochasticNet(15).py' StochasticNet.py
+mv 'Symmerty(3).py' Symmerty.py
+mv 'Time_embedding(7).py' Time_embedding.py
+mv 'lr(2).py' lr.py
+mv 'train(8).py' train.py
+mv 'generation(4).py' generation.py
 ```
 
 ## Training
 
-The main training parameters are configured at the end of `train.py`:
+The principal training parameters are defined near the end of `train.py`:
 
 ```python
 L_list = [64]
@@ -256,7 +276,7 @@ mb_size = 32
 Ly = 8
 ```
 
-The default quartic coupling is
+The current training script uses
 
 ```python
 lam = 0.022
@@ -268,54 +288,47 @@ Run training with
 python train.py
 ```
 
-The training script creates checkpoints under
+Checkpoints are stored in directories of the form
 
 ```text
 model/phi4/kappa<KAPPA>_L<LX>_<NUM_DIFFUSION>/
 ```
 
-For example,
+For the default parameters, the checkpoint directory is
 
 ```text
 model/phi4/kappa0.28_L64_250/
 ```
 
-The per-trajectory loss estimator is computed as
+The training loss is evaluated from
 
 ```python
 kl_matrix = logP + action_val
-```
-
-and the batch objective is obtained from
-
-```python
 kl, std = tf.nn.moments(kl_matrix, -1)
 ```
 
 where:
 
-- `logP` is the trajectory-dependent endpoint log-density estimator;
+- `logP` is the accumulated path-dependent log-density estimator;
 - `action_val` is the terminal lattice action;
-- `kl` is the batch mean of the SPS objective;
-- `std` is the corresponding batch variance returned by `tf.nn.moments`.
+- `kl` is the batch estimate of the SPS variational objective;
+- `std` is the batch variance returned by `tf.nn.moments`.
 
-The training log is written to
+Training information is written to
 
 ```text
 training_log.txt
 ```
 
-with the columns
+with columns
 
 ```text
 epoch    kl    std    time(s)
 ```
 
-Checkpoints and generated diagnostic samples are saved every 250 epochs.
+## Generating configurations
 
-## Configuration generation
-
-Before generation, set the parameters in `generation.py` consistently with the trained checkpoint:
+Set the generation parameters in `generation.py` so that they match the trained checkpoint:
 
 ```python
 NUM_diffusion = 250
@@ -325,19 +338,13 @@ mb_size = 4096
 L = 64
 ```
 
-Run
+Then run
 
 ```bash
 python generation.py
 ```
 
-The script restores the latest checkpoint from
-
-```text
-model/phi4/kappa<KAPPA>_L<L>_<NUM_DIFFUSION>/
-```
-
-and saves generated arrays under
+The script restores the latest checkpoint and saves
 
 ```text
 kappa<KAPPA>L<L>/
@@ -348,8 +355,8 @@ kappa<KAPPA>L<L>/
 
 The files contain:
 
-- `DM.npy`: generated terminal field configurations;
-- `logp.npy`: trajectory-dependent log-density estimates;
+- `DM.npy`: generated terminal configurations;
+- `logp.npy`: accumulated path log-density estimates;
 - `action.npy`: terminal action values.
 
 ## Minimal generation example
@@ -371,36 +378,36 @@ checkpoint_dir = "model/phi4/kappa0.28_L64_250"
 
 model = StochasticNet(Lx=Lx, Ly=Ly)
 checkpoint = tf.train.Checkpoint(model=model)
-latest = tf.train.latest_checkpoint(checkpoint_dir)
 
+latest = tf.train.latest_checkpoint(checkpoint_dir)
 if latest is None:
     raise FileNotFoundError(
-        f"No TensorFlow checkpoint was found in {checkpoint_dir}"
+        f"No checkpoint was found in {checkpoint_dir}"
     )
 
 checkpoint.restore(latest).expect_partial()
 
-action_fn = lambda field: Action(
-    field,
+action_fn = lambda cfgs: Action(
+    cfgs=cfgs,
     lam=lam,
     k=kappa,
 )
 
-configurations, log_probability, action_values = model.ForwardDiffusion(
+cfgs, logp, action_values = model.ForwardDiffusion(
     mb_size=num_samples,
     shape=(Lx, Ly),
     num_diffusion=num_diffusion,
     action_fn=action_fn,
 )
 
-print("Configurations:", configurations.shape)
-print("Log probability:", log_probability.shape)
-print("Action:", action_values.shape)
+print("Configurations:", cfgs.shape)
+print("Path log densities:", logp.shape)
+print("Action values:", action_values.shape)
 ```
 
 ## Symmetry options
 
-Random trajectory-level symmetry transformations can be enabled when the model is constructed:
+Random trajectory-level symmetry transformations can be enabled by constructing the model with
 
 ```python
 model = StochasticNet(
@@ -410,60 +417,42 @@ model = StochasticNet(
 )
 ```
 
-The convolutional drift networks call the periodic convolution layers with
+The periodic convolutional drift networks use symmetry-averaged kernels by default inside `DiffusionSubNet.network`.
 
-```python
-use_d4=True
-```
+For square kernels, the code uses $D_4$ averaging. For rectangular kernels, it uses the shape-preserving $D_2$ subgroup.
 
-by default. For square kernels, the kernel is averaged over the $D_4$ group. For rectangular kernels, the code instead uses the shape-preserving $D_2$ subgroup.
+## Precision
 
-## Numerical precision
+The code uses TensorFlow's default floating-point precision unless changed explicitly.
 
-The current implementation uses TensorFlow's default floating-point precision. Double precision can be enabled before model construction with
+To use double precision, set
 
 ```python
 tf.keras.backend.set_floatx("float64")
 ```
 
-Double precision increases memory use and computational cost.
+before constructing the model. Double precision increases memory usage and computational cost.
 
-## Checkpoint consistency
+## Checkpoint compatibility
 
-The following settings should remain consistent between training and generation:
+The following settings must be consistent between training and generation:
 
 - lattice dimensions $L_x$ and $L_y$;
 - hopping parameter $\kappa$;
 - quartic coupling $\lambda$;
-- diffusion depth $N$;
-- hidden-channel dimensions;
-- neural-network architecture;
-- symmetry settings.
+- number of stochastic steps $N$;
+- network architecture;
+- hidden-channel count;
+- symmetry configuration.
 
-Changing the model architecture after training may lead to incomplete checkpoint restoration.
-
-## Notes on the current implementation
-
-1. The default numerical example uses a lattice of shape $L_x\times 8$.
-2. The diffusion coefficient is generated by a learnable neural schedule.
-3. The forward and backward drifts are represented by independent neural networks.
-4. The generated endpoint density is trajectory dependent when exact trajectory balance is not achieved.
-5. The supplied generation script uses
-
-   ```python
-   Step_generation = 20 * NUM_diffusion
-   ```
-
-   so the generation depth may differ from the depth used during training. Change this value deliberately according to the intended experiment.
+Changing the architecture after training may lead to incomplete checkpoint restoration.
 
 ## Citation
 
 Please cite the associated paper when using this code:
 
 ```bibtex
-@article{Chen:2026SPS,
-  author        = {Chen, Shiyang and Qian, Moxian and Aarts, Gert and
-                   Lucini, Biagio and Zhou, Kai},
+@article{chen2026stochastic,
   title         = {Stochastic Path Sampler for Lattice Field Theory},
   year          = {2026},
   eprint        = {2606.13790},
@@ -473,8 +462,6 @@ Please cite the associated paper when using this code:
 }
 ```
 
+## License
 
-
-## Contact
-
-For questions concerning the method, numerical experiments, or implementation, please contact the authors of the associated paper.
+No software license is included in the current repository. Add a `LICENSE` file before public redistribution.
