@@ -43,58 +43,30 @@ The action is evaluated in `Action.py`.
 
 For a discretization depth (N), the forward transition is represented schematically by
 
-[
-\phi_{i+1}
-==========
-
-\phi_i
-+
-\sigma_\theta^2(t_i)
-K_{\theta,\mathrm F}(\phi_i,t_i)
-+
-\sigma_\theta(t_i)\sqrt{\Delta t},\eta_i,
-]
+$
+\phi_{i+1} = \phi_i + \sigma_\theta^2(t_i) K_{\theta,\mathrm F}(\phi_i,t_i) + \sigma_\theta(t_i)\sqrt{\Delta t},\eta_i,
+$
 
 where
 
-[
-\eta_i\sim\mathcal N(0,I),
-\qquad
-\Delta t=\frac{1}{N}.
-]
+$ \eta_i\sim\mathcal N(0,I), \qquad \Delta t=\frac{1}{N}.
+$
 
-An auxiliary backward transition is defined using a second drift network,
+An backward transition is defined using a second drift network,
 
-[
-\phi_i
-======
-
-\phi_{i+1}
-+
-\sigma_\theta^2(t_i)
-K_{\theta,\mathrm B}(\phi_{i+1},t_i)
-+
-\sigma_\theta(t_i)\sqrt{\Delta t},\widetilde{\eta}_i.
-]
+$
+\phi_i = \phi_{i+1} + \sigma_\theta^2(t_i) K_{\theta,\mathrm B}(\phi_{i+1},t_i) + \sigma_\theta(t_i)\sqrt{\Delta t},\widetilde{\eta}_i.
+$
 
 The model accumulates the trajectory log-ratio
 
-[
-\log q_{\mathrm{SPS}}(\phi_N;\tau)
-==================================
-
-\log \pi_0(\phi_0)
-+
-\sum_{i=0}^{N-1}
-\left[
-\log q_{\mathrm F}
-(\phi_{i+1}\mid\phi_i)
-----------------------
+$
+\log q_{\mathrm{SPS}}(\phi_N;\tau) = \log \pi_0(\phi_0) + \sum_{i=0}^{N-1} \left[ \log q_{\mathrm F} (\phi_{i+1}\mid\phi_i)
 
 \log q_{\mathrm B}
 (\phi_i\mid\phi_{i+1})
 \right].
-]
+$
 
 The training objective is the reverse path-space KL estimator
 
