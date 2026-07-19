@@ -28,7 +28,7 @@ This implementation applies SPS to the two-dimensional scalar $\phi^4$ theory wi
 The lattice action implemented in this repository is
 
 
-$ S[\phi] = \sum_x ( (1-2\lambda) \phi_x^2 + \lambda\phi_x^4 - 2\kappa \sum_{\mu} \phi_x\phi_{x+\hat{\mu}} )$,
+$ S[\phi] = \sum_x \left[ (1-2\lambda) \phi_x^2 + \lambda\phi_x^4 - 2\kappa \sum_{\mu} \phi_x\phi_{x+\hat{\mu}} \right] $,
 
 
 where:
