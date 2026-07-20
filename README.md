@@ -46,22 +46,11 @@ The action is implemented in `Action.py`.
 
 Let $N$ denote the number of discrete stochastic steps and
 
-$
-\Delta t=\frac{1}{N}.
-$
+$$ \Delta t=\frac{1}{N}. $$
 
 A forward transition is represented schematically as
 
-$
-\phi_{i+1}
-=
-\phi_i
-+
-\sigma_\theta^2(t_i)
-K_{\theta,\mathrm F}(\phi_i,t_i)
-+
-\sigma_\theta(t_i)\sqrt{\Delta t}\,\eta_i,
-$
+$$ \phi_{i+1} = \phi_i + \sigma_\theta^2(t_i) K_{\theta,\mathrm F}(\phi_i,t_i) + \sigma_\theta(t_i)\sqrt{\Delta t}\,\eta_i, $$
 
 with
 
