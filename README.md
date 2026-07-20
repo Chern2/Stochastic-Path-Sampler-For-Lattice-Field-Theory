@@ -424,7 +424,7 @@ The network architecture and hyperparameters in this repository were further opt
 
 With the updated implementation, training (default setting, use_d4=True, use_symmetry=False) for approximately 7 hours on an \(L=64\) lattice near the critical region, using  $\kappa = 0.27$ and $\lambda = 0.022$, produces an effective sample size ratio and an Independence Metropolis--Hastings acceptance rate of approximately (NUM_diffusion = 5000 in generation) 
 
-$\frac{\mathrm{ESS}}{N_{\mathrm{sample}}} \simeq 0.7$, and $P_{\mathrm{acc}} \simeq 0.7$.
+$$\frac{\mathrm{ESS}}{N_{\mathrm{sample}}} \simeq 0.7 \qquad P_{\mathrm{acc}} \simeq 0.7$$.
 
 ![SPS result at \(L=64\), \(\kappa=0.27\)](result_L64kappa0.27.png)
 
