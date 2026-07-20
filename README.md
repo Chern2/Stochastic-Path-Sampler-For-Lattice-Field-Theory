@@ -86,7 +86,7 @@ up to the unknown normalization constant of the target distribution.
 ├── lr.py
 ├── train.py
 ├── generation.py
-├── accept_imh(2).py
+├── accept_imh.py
 └── README.md
 ```
 
@@ -155,7 +155,7 @@ Trains the SPS model by minimizing the path-space objective.
 
 Loads a trained checkpoint and generates lattice configurations with the learned forward process.
 
-### `accept_imh(2).py`
+### `accept_imh.py`
 
 Constructs an Independence Metropolis--Hastings (IMH) chain from SPS-generated proposals using `action.npy`, `logp.npy`, and the generated sample file. It also computes the raw importance-weight ESS, the IMH acceptance rate, and lattice observables including the magnetization, susceptibility, and Binder cumulant.
 
