@@ -32,7 +32,7 @@ This implementation includes:
 
 The implemented lattice action is
 
-$
+$$
 S[\phi]
 =
 \sum_x
@@ -43,7 +43,7 @@ S[\phi]
 -
 2\kappa\sum_{\mu}\phi_x\phi_{x+\hat\mu}
 \right].
-$
+$$
 
 Here:
 
