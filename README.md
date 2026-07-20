@@ -454,7 +454,7 @@ $$
 P_{\mathrm{acc}} \simeq 0.7.
 $$
 
-These results indicate that the updated SPS proposal achieves both high statistical efficiency and a high acceptance probability even close to the critical point. The reported values may depend on the hardware, random initialization, training duration, batch size, diffusion depth, and checkpoint selection.
+
 
 ## Citation
 
