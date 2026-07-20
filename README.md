@@ -378,17 +378,6 @@ For square kernels, the code uses $D_4$ averaging. For rectangular kernels, it u
 
 Enabling symmetry transformations is recommended, as they encourage the sampler to explore symmetry-related sectors and improve the network's coverage of all physically relevant modes of the target distribution.
 
-## Symmetry options
-
-Trajectory-level random symmetry transformations can be enabled when constructing the model:
-
-```python
-model = StochasticNet(
-    Lx=Lx,
-    Ly=Ly,
-    use_symmetry=True,
-)
-```
 
 ## Precision
 
