@@ -12,9 +12,7 @@ This repository accompanies:
 
 The Stochastic Path Sampler constructs learnable forward and backward stochastic dynamics between a simple prior distribution and an unnormalized lattice-field target distribution,
 
-$$
-\pi(\phi)=\frac{1}{Z}e^{-S(\phi)}.
-$$
+$$ \pi(\phi)=\frac{1}{Z}e^{-S(\phi)}. $$
 
 The forward process generates field configurations, while an auxiliary backward process is used to evaluate a trajectory-level probability ratio. Training minimizes a path-space variational objective that does not require samples from the target distribution.
 
@@ -54,56 +52,24 @@ $$ \phi_{i+1} = \phi_i + \sigma_\theta^2(t_i) K_{\theta,\mathrm F}(\phi_i,t_i) +
 
 with
 
-$
-\eta_i\sim\mathcal N(0,I).
-$
+$$ \eta_i\sim\mathcal N(0,I). $$
 
 The auxiliary backward transition is represented as
 
-$
-\phi_i
-=
-\phi_{i+1}
-+
-\sigma_\theta^2(t_i)
-K_{\theta,\mathrm B}(\phi_{i+1},t_i)
-+
-\sigma_\theta(t_i)\sqrt{\Delta t}\,\widetilde\eta_i.
-$
+$$
+\phi_i = \phi_{i+1} + \sigma_\theta^2(t_i) K_{\theta,\mathrm B}(\phi_{i+1},t_i) + \sigma_\theta(t_i)\sqrt{\Delta t}\,\widetilde\eta_i. $$
 
 For a trajectory
 
-$
-\tau=(\phi_0,\phi_1,\ldots,\phi_N),
-$
+$$ \tau=(\phi_0,\phi_1,\ldots,\phi_N), $$
 
 the code accumulates the path-dependent endpoint log-density estimator
 
-$
-\log q_{\mathrm{SPS}}(\phi_N;\tau)
-=
-\log \pi_0(\phi_0)
-+
-\sum_{i=0}^{N-1}
-\left[
-\log q_{\mathrm F}(\phi_{i+1}\mid\phi_i)
--
-\log q_{\mathrm B}(\phi_i\mid\phi_{i+1})
-\right].
-$
+$$ \log q_{\mathrm{SPS}}(\phi_N;\tau) = \log \pi_0(\phi_0) + \sum_{i=0}^{N-1} \left[ \log q_{\mathrm F}(\phi_{i+1}\mid\phi_i) - \log q_{\mathrm B}(\phi_i\mid\phi_{i+1}) \right]. $$
 
 The training objective is
 
-$
-\mathcal L_{\mathrm{SPS}}
-=
-\mathbb E_{q_{\mathrm F}}
-\left[
-\log q_{\mathrm{SPS}}(\phi_N;\tau)
-+
-S(\phi_N)
-\right],
-$
+$$ \mathcal L_{\mathrm{SPS}} = \mathbb E_{q_{\mathrm F}} \left[ \log q_{\mathrm{SPS}}(\phi_N;\tau) + S(\phi_N) \right],$$
 
 up to the unknown normalization constant of the target distribution.
 
