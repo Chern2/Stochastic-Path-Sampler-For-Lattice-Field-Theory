@@ -324,12 +324,12 @@ def run_for_directory(
     Convenience wrapper for one directory containing:
         action.npy
         logp.npy
-        DM.npy
+        SPS.npy
     """
 
     action_file = os.path.join(data_dir, "action.npy")
     logp_file = os.path.join(data_dir, "logp.npy")
-    samples_file = os.path.join(data_dir, "DM.npy")
+    samples_file = os.path.join(data_dir, "SPS.npy")
 
     output_chain = os.path.join(data_dir, "mh_chain.npy")
     output_accepted_samples = os.path.join(data_dir, "accepted_samples.npy")
