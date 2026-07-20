@@ -406,6 +406,20 @@ The periodic convolutional drift networks use symmetry-averaged kernels by defau
 
 For square kernels, the code uses $D_4$ averaging. For rectangular kernels, it uses the shape-preserving $D_2$ subgroup.
 
+Enabling symmetry transformations is recommended, as they encourage the sampler to explore symmetry-related sectors and improve the network's coverage of all physically relevant modes of the target distribution.
+
+## Symmetry options
+
+Trajectory-level random symmetry transformations can be enabled when constructing the model:
+
+```python
+model = StochasticNet(
+    Lx=Lx,
+    Ly=Ly,
+    use_symmetry=True,
+)
+```
+
 ## Precision
 
 The code uses TensorFlow's default floating-point precision unless changed explicitly.
@@ -438,8 +452,7 @@ Changing the architecture after training may lead to incomplete checkpoint resto
 
 The network architecture and hyperparameters in this repository were further optimized after the completion of the experiments reported in the paper. Therefore, some implementation details may differ slightly from those described in arXiv:2606.13790.
 
-With the updated implementation, training for approximately seven hours on an \(L=64\) lattice near the critical region, using
-
+With the updated implementation, training (default setting, use_d4=True, use_symmetry=False) for approximately seven hours on an \(L=64\) lattice near the critical region, using 
 $$
 \kappa = 0.27,
 \qquad
