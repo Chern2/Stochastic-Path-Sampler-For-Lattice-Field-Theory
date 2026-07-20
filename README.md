@@ -299,22 +299,10 @@ The files contain:
 After generating `action.npy`, `logp.npy`, and the proposal samples, run
 
 ```bash
-python "accept_imh(2).py"
+python "accept_imh.py"
 ```
 
-Before running the script, ensure that the sample filename used in `run_for_directory` matches the output of `generation.py`. The current generation script saves `SPS.npy`, whereas `accept_imh(2).py` currently reads `DM.npy`; therefore, either rename the generated file or change
-
-```python
-samples_file = os.path.join(data_dir, "DM.npy")
-```
-
-to
-
-```python
-samples_file = os.path.join(data_dir, "SPS.npy")
-```
-
-For each data directory, the script produces
+Before running the script, ensure that the sample filename used in `run_for_directory` matches the output of `generation.py`. The current generation script saves `SPS.npy`. For each data directory, the script produces
 
 ```text
 mh_chain.npy
