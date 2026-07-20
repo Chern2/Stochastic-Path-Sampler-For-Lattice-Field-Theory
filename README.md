@@ -459,7 +459,7 @@ $$
 \lambda = 0.022,
 $$
 
-produces an effective sample size ratio and an Independence Metropolis--Hastings acceptance rate of approximately
+produces an effective sample size ratio and an Independence Metropolis--Hastings acceptance rate of approximately (NUM_diffusion = 5000 in generation)
 
 $$
 \frac{\mathrm{ESS}}{N_{\mathrm{sample}}} \simeq 0.7,
