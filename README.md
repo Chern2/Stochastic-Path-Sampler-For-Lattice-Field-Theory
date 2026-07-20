@@ -432,6 +432,30 @@ The following settings must be consistent between training and generation:
 
 Changing the architecture after training may lead to incomplete checkpoint restoration.
 
+
+
+## Updated implementation and performance
+
+The network architecture and hyperparameters in this repository were further optimized after the completion of the experiments reported in the paper. Therefore, some implementation details may differ slightly from those described in arXiv:2606.13790.
+
+With the updated implementation, training for approximately seven hours on an \(L=64\) lattice near the critical region, using
+
+$$
+\kappa = 0.27,
+\qquad
+\lambda = 0.022,
+$$
+
+produces an effective sample size ratio and an Independence Metropolis--Hastings acceptance rate of approximately
+
+$$
+\frac{\mathrm{ESS}}{N_{\mathrm{sample}}} \simeq 0.7,
+\qquad
+P_{\mathrm{acc}} \simeq 0.7.
+$$
+
+These results indicate that the updated SPS proposal achieves both high statistical efficiency and a high acceptance probability even close to the critical point. The reported values may depend on the hardware, random initialization, training duration, batch size, diffusion depth, and checkpoint selection.
+
 ## Citation
 
 Please cite the associated paper when using this code:
