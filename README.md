@@ -32,18 +32,7 @@ This implementation includes:
 
 The implemented lattice action is
 
-$$
-S[\phi]
-=
-\sum_x
-\left[
-(1-2\lambda)\phi_x^2
-+
-\lambda\phi_x^4
--
-2\kappa\sum_{\mu}\phi_x\phi_{x+\hat\mu}
-\right].
-$$
+$$ S[\phi] = \sum_x \left[ (1-2\lambda)\phi_x^2 + \lambda\phi_x^4 - 2\kappa\sum_{\mu}\phi_x\phi_{x+\hat\mu} \right]. $$
 
 Here:
 
