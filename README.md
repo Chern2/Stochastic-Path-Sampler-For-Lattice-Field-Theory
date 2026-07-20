@@ -12,9 +12,9 @@ This repository accompanies:
 
 The Stochastic Path Sampler constructs learnable forward and backward stochastic dynamics between a simple prior distribution and an unnormalized lattice-field target distribution,
 
-$
+$$
 \pi(\phi)=\frac{1}{Z}e^{-S(\phi)}.
-$
+$$
 
 The forward process generates field configurations, while an auxiliary backward process is used to evaluate a trajectory-level probability ratio. Training minimizes a path-space variational objective that does not require samples from the target distribution.
 
