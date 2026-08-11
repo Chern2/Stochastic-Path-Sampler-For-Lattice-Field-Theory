@@ -411,7 +411,7 @@ Changing the architecture after training may lead to incomplete checkpoint resto
 
 The network architecture and hyperparameters in this repository were further optimized after the completion of the experiments reported in the paper. Therefore, some implementation details may differ slightly from those described in arXiv:2606.13790.
 
-With the updated implementation, training (default setting, use_d4=True, use_symmetry=False) for approximately 7 hours on an \(L=64\) lattice near the critical region ( NVIDIA RTX 5090m GPU platform), using  $\kappa = 0.27$ and $\lambda = 0.022$, produces an effective sample size ratio and an Independence Metropolis--Hastings acceptance rate of approximately (NUM_diffusion = 5000 in generation) 
+With the updated implementation, training (default setting, use_d4=True, use_symmetry=False) for approximately 4.5 hours on an \(L=64\) lattice near the critical region ( NVIDIA RTX 5090m GPU platform), using  $\kappa = 0.27$ and $\lambda = 0.022$, produces an effective sample size ratio and an Independence Metropolis--Hastings acceptance rate of approximately (NUM_diffusion = 5000 in generation) 
 
 
 # $$\frac{\mathrm{ESS}}{N_{\mathrm{sample}}} \simeq 0.78 \qquad P_{\mathrm{acc}} \simeq 0.73$$.
